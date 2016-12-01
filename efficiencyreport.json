@@ -1,0 +1,65 @@
+{
+  "size": 0,
+  "query": {
+    "constant_score": {
+      "filter": { 
+        "bool":{
+          "must": [ 
+            {"wildcard": {"VOName":"*uboone*"}},
+            {"wildcard": {"ProbeName":"condor:fifebatch?.fnal.gov"}},
+            {"range": {
+              "EndTime": {
+                "gte": "2016-11-29T09:30:00Z",
+                "lt": "2016-11-30T09:30:00Z"
+              }
+            }},
+            {"range": {
+              "WallDuration" : {"gt": 0}
+            }},
+            {"term": {"Host_description": "GPGrid"}},
+            {"term": {"ResourceType": "Payload"}}
+          ]
+        }
+      }
+    }
+  },
+  "aggs": {
+    "group_VOName": {
+      "terms": {"field": "ReportableVOName"},
+      "aggs": {
+        "group_HostDescription": {
+          "terms": {"field": "Host_description"},
+          "aggs": {
+            "group_CommonName": {
+              "terms": {"field": "CommonName"},
+              "aggs": {
+                "WallHours": {
+                  "sum": {
+                    "script": {
+                      "inline": "(doc['WallDuration'].value*doc['Processors'].value)/3600"
+                    }
+                  }
+                },
+                "CPU_Duration_sec": {
+                  "sum": {"field": "CpuDuration"}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+     
+        
+         
+
+        
+
+        
+
+        
+
