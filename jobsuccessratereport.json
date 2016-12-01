@@ -1,0 +1,21 @@
+{
+  "query": {
+    "bool": {
+      "filter": [ 
+          {"range": {
+            "EndTime": {
+              "lt": "2016-11-28T00:00Z", 
+              "gte": "2016-11-29T00:00Z"
+            } 
+          }}, 
+          {"term": {"ResourceType": "Payload"}}, 
+          {"term": {"VOName": "/fermilab/nova/Role=Production/Capability=NULL"}} 
+      ], 
+      "must": [
+        {"wildcard": {"VOName": "*Role=Production*"}}
+      ] 
+    }
+  }, 
+  "sort": ["_doc"], 
+  "size": 1000
+}
